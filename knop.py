@@ -2,6 +2,17 @@ import glob,csv,re
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.polynomial.polynomial import polyfit
+plt.rcParams.update({'font.size': 22})
+
+# Get current size
+fig_size = plt.rcParams["figure.figsize"]
+
+# Prints: [8.0, 6.0]
+
+# Set figure width to 12 and height to 9
+fig_size[0] = 12
+fig_size[1] = 9
+plt.rcParams["figure.figsize"] = fig_size
 
 csv_files = glob.glob("knop/*.csv")
 start = 5

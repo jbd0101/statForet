@@ -2,6 +2,17 @@ import glob,csv,re
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.polynomial.polynomial import polyfit
+plt.rcParams.update({'font.size': 22})
+
+# Get current size
+fig_size = plt.rcParams["figure.figsize"]
+
+# Prints: [8.0, 6.0]
+
+# Set figure width to 12 and height to 9
+fig_size[0] = 12
+fig_size[1] = 9
+plt.rcParams["figure.figsize"] = fig_size
 
 csv_files = glob.glob("data/*.csv")
 start = 5
@@ -26,7 +37,7 @@ for file in csv_files:
             # print("Donne texte detecte ")
             continue
           else:
-            if("rand" not in row[n] and "rij" not in row[n] and '?' not in row[n]):
+            if("rand" not in row[n] and "rij" != row[n] and '?' not in row[n]):
               id = (str(ligne)+"-"+str(n)+"-"+str(row[n])).upper()
               try:
                 data = float(row[n+1].replace(",","."))
@@ -128,63 +139,63 @@ with myFile:
 
 print("-------- creation des graphiques --------")
 
-print("Graphique #1 : Taille sur un histogramme seul / categorie")
-objects = categories
-y_pos = np.arange(len(objects))
-graph_data = []
-errors_bars = []
-for category in categories:
-  d = calcByCategory[category]
-  graph_data.append(d["mean-tailles.csv"])
-  errors_bars.append(d["sd-tailles.csv"])
-plt.bar(y_pos, graph_data, align='center', alpha=0.5)
-plt.errorbar(y_pos, graph_data,yerr=errors_bars,fmt='o',capsize=5)
+# print("Graphique #1 : Taille sur un histogramme seul / categorie")
+# objects = categories
+# y_pos = np.arange(len(objects))
+# graph_data = []
+# errors_bars = []
+# for category in categories:
+#   d = calcByCategory[category]
+#   graph_data.append(d["mean-tailles.csv"])
+#   errors_bars.append(d["sd-tailles.csv"])
+# plt.bar(y_pos, graph_data, align='center', alpha=0.5,color='g')
+# plt.errorbar(y_pos, graph_data,yerr=errors_bars,fmt='o',capsize=5)
 
-plt.xticks(y_pos, objects)
-plt.ylabel('Gemiddelde (cm)')
-plt.title('Gemiddelde hoogte per herkomst')
-plt.savefig('charts/Taille_bar.png')
-
-
+# plt.xticks(y_pos, objects)
+# plt.ylabel('Gemiddelde hoogte (cm)')
+# plt.title('Gemiddelde hoogte per herkomst')
+# plt.savefig('charts/Taille_bar.png')
 
 
-print("Graphique #2 : dikte1 et dikte2 / categorie")
-objects = categories
-y_pos = np.arange(len(objects))
-graph_data_dikte1 = []
-graph_data_dikte10 = []
-errors_bars_1 = []
-errors_bars_2 = []
-for category in categories:
-  d = calcByCategory[category]
-  graph_data_dikte10.append(d["mean-Dikte10cm.csv"])
-  graph_data_dikte1.append(d["mean-Dikte1m.csv"])
-  errors_bars_1.append(d["sd-Dikte10cm.csv"])
-  errors_bars_2.append(d["sd-Dikte1m.csv"])
 
 
-fig, ax = plt.subplots()
-bar_width = 0.35
-opacity = 0.8
-rects1 = plt.bar(y_pos, graph_data_dikte10, bar_width,
-alpha=opacity,
-color='b',
-label='Omtrek op 10cm')
-rects2 = plt.bar(y_pos + bar_width, graph_data_dikte1, bar_width,
-alpha=opacity,
-color='g',
-label='Omtrek op 1m')
-plt.errorbar(y_pos, graph_data_dikte10,yerr=errors_bars_1,fmt='o',capsize=5)
-plt.errorbar(y_pos+bar_width, graph_data_dikte1,yerr=errors_bars_2,fmt='o',capsize=5)
+# print("Graphique #2 : dikte1 et dikte2 / categorie")
+# objects = categories
+# y_pos = np.arange(len(objects))
+# graph_data_dikte1 = []
+# graph_data_dikte10 = []
+# errors_bars_1 = []
+# errors_bars_2 = []
+# for category in categories:
+#   d = calcByCategory[category]
+#   graph_data_dikte10.append(d["mean-Dikte10cm.csv"])
+#   graph_data_dikte1.append(d["mean-Dikte1m.csv"])
+#   errors_bars_1.append(d["sd-Dikte10cm.csv"])
+#   errors_bars_2.append(d["sd-Dikte1m.csv"])
 
-plt.xlabel('herkomst')
-plt.ylabel('hoogte ( cm ) ')
-plt.title('Gemiddelde omtrek per herkomst ')
-plt.xticks(y_pos + bar_width, objects)
-plt.legend()
 
-plt.tight_layout()
-plt.savefig('charts/dikte.png')
+# fig, ax = plt.subplots()
+# bar_width = 0.35
+# opacity = 0.8
+# rects1 = plt.bar(y_pos, graph_data_dikte10, bar_width,
+# alpha=opacity,
+# color='b',
+# label='Omtrek op 10cm')
+# rects2 = plt.bar(y_pos + bar_width, graph_data_dikte1, bar_width,
+# alpha=opacity,
+# color='g',
+# label='Omtrek op 1m')
+# plt.errorbar(y_pos, graph_data_dikte10,yerr=errors_bars_1,fmt='o',capsize=5)
+# plt.errorbar(y_pos+bar_width, graph_data_dikte1,yerr=errors_bars_2,fmt='o',capsize=5)
+
+# plt.xlabel('herkomst')
+# plt.ylabel('hoogte ( cm ) ')
+# plt.title('Gemiddelde omtrek per herkomst ')
+# plt.xticks(y_pos + bar_width, objects)
+# plt.legend()
+
+# plt.tight_layout()
+# plt.savefig('charts/dikte.png')
 
 
 print("graph #3 , Par arbre , par catégorie, sa taille en fonction du perimetre à 10cm")
@@ -210,13 +221,22 @@ for i in range(1,len(categories)+1):
         x_data.append(point[0])
         y_data.append(point[1])
     fig.add_subplot(rows, columns, i)
-    plt.xlabel("Omtrek van  "+cat)
+    plt.xlabel("Omtrek van  "+cat+" in cm")
     plt.ylabel("Hoogte in cm")
     plt.yscale('linear')
     plt.title("Hoogte in functie van de omtrek |  "+cat)
     b, m = polyfit(x_data, y_data, 1)
     residu = np.sum((np.polyval(np.polyfit(x_data, y_data, 2), x_data) - y_data)**2)
-    residus.append(residu)
+    # error_rate = np.polyfit(x_data, y_data, 2), x_data) - y_data)**2)
+    x_data = np.array(x_data,dtype=np.float32)
+    valeur_theorique = (x_data*m+b)
+    print(valeur_theorique)
+    valeur_reels = (y_data)
+    print(y_data)
+    erreurs = (valeur_theorique -valeur_reels)/valeur_reels
+    # print(erreur)
+    # residus.append(residu)
+    residus.append(np.nanmean(erreurs))
     residu_cat.append(cat)
     plt.plot(x_data, b + m * np.array(x_data,dtype=np.float), '-')
     plt.plot(x_data, y_data, 'ro')

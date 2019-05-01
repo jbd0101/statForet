@@ -40,7 +40,7 @@ for file in csv_files:
             # print("Donne texte detecte ")
             continue
           else:
-            if("rand" not in row[n] and "rij" not in row[n] and '?' not in row[n]):
+            if("rand" not in row[n] and "rij" != row[n] and '?' not in row[n]):
               weeks = list(str(row[n+1]))
               for w in range(len(weeks)):
                 subkind = str(kind)+headers[w]
@@ -158,6 +158,7 @@ for c in range(len(categories)):
   print(y_datas[c])
   plt.plot(x_data,y_datas[c],'o-',label=categories[c])
 plt.xlabel("week")
+plt.title("Evolutie knopuitloop")
 plt.ylabel("knoppels")
 legend = plt.legend(loc='upper center', shadow=True, fontsize='x-large')
 

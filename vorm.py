@@ -46,32 +46,39 @@ for file in csv_files:
             # print("Donne texte detecte ")
             continue
           else:
-            if("rand" not in row[n] and "rij" not in row[n] and '?' not in row[n]):
+            if("rand" not in row[n] and "rij" != row[n] and '?' not in row[n]):
               weeks = str(row[n+1]).split("-")
               if len(weeks) != 6:
                 print(row[n+1])
               for w in range(len(weeks)):
-                subkind = str(kind)+headers[w]
+                try:
+                  subkind = str(kind)+headers[w]
+                except IndexError :
+                  continue
                 week = weeks[w]
                 id = (str(ligne)+"-"+str(n)+"-"+str(row[n])).upper()
-                try:
-                  data = float(week.replace(",","."))
-                except ValueError:
-                  # print("Erreur avec la donnee "+row[n+1])
+                if(week != " "):
+                  try:
+                    data = float(week.replace(",","."))
+                  except ValueError:
+                    # print("Erreur avec la donnee "+row[n+1])
 
-                  data = week.replace(",",".")
-                  data = re.sub(r'[a-zA-Z()]*',"",data)
-                  data = float(data)
-                # response.append([id,ligne,n,row[n],data])
-                if id not in datas:
-                  ids.append(id)
-                  datas[id] = {}
-                  datas[id]["datas"] = {subkind: data}
-                  datas[id]["category"] = row[n].upper()
-                  datas[id]["cols"] = [subkind]
-                else:
-                  datas[id]["datas"][subkind] = (data)
-                  datas[id]["cols"].append(subkind)
+                    data = week.replace(",",".")
+                    data = re.sub(r'[a-zA-Z()]*',"",data)
+                    try:
+                      data = float(data)
+                    except Exception as e:
+                      continue
+                  # response.append([id,ligne,n,row[n],data])
+                  if id not in datas:
+                    ids.append(id)
+                    datas[id] = {}
+                    datas[id]["datas"] = {subkind: data}
+                    datas[id]["category"] = row[n].upper()
+                    datas[id]["cols"] = [subkind]
+                  else:
+                    datas[id]["datas"][subkind] = (data)
+                    datas[id]["cols"].append(subkind)
 #   myFile = open('output/inline-'+file.replace("data/",""), 'w')
 #   with myFile:
 #     writer = csv.writer(myFile)
@@ -168,7 +175,7 @@ for category in categories:
   d = calcByCategory[category]
   graph_data_sum.append(np.array(d["sum-vormscore.csvdt"],dtype=np.float32)/np.array(d["length-vormscore.csvdt"],dtype=np.float32)*100.0)
 
-plt.bar(y_pos, graph_data_sum, align='center', alpha=0.5)
+plt.bar(y_pos, graph_data_sum, align='center', alpha=0.5,color='g')
 # plt.errorbar(y_pos, graph_data,yerr=errors_bars,fmt='o',capsize=5)
 
 plt.xticks(y_pos, objects)
@@ -186,7 +193,7 @@ for category in categories:
   d = calcByCategory[category]
   graph_data.append(d["mean-vormscore.csvvorm"])
   # errors_bars.append(d["sd-vormscore.csvvorm"])
-plt.bar(y_pos, graph_data, align='center', alpha=0.5)
+plt.bar(y_pos, graph_data, align='center', alpha=0.5,color='g')
 # plt.errorbar(y_pos, graph_data,yerr=errors_bars,fmt='o',capsize=5)
 
 plt.xticks(y_pos, objects)
@@ -203,7 +210,7 @@ for category in categories:
   d = calcByCategory[category]
   graph_data.append(np.array(d["sum-vormscore.csvztak"],dtype=np.float32)/np.array(d["length-vormscore.csvztak"],dtype=np.float32)*100.0)
 
-plt.bar(y_pos, graph_data, align='center', alpha=0.5)
+plt.bar(y_pos, graph_data, align='center', alpha=0.5,color='g')
 
 plt.xticks(y_pos, objects)
 plt.ylabel('Percentage aanwezigheid zware zijtak dichtbij de grond')
